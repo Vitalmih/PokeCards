@@ -16,8 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let layout = UICollectionViewFlowLayout()
-        let initialViewController = PokeCardsCollectionViewController(collectionViewLayout: layout)
+        let manager = APIManager()
+        let initialViewController = PokeCardsCollectionViewController(apiManager: manager)
         let navigationController = UINavigationController(rootViewController: initialViewController)
         
         self.window = UIWindow(windowScene: windowScene)
