@@ -12,6 +12,7 @@ class PokeCardsCollectionViewController: UIViewController {
     let apiManager: PokeNetworkManagerProtocol
     var pokeNames = [Result]()
     var pokeTypes = [PokeTypes]()
+    var filtredPokeNames = [Pokemon]()
     var nextPage = ""
   
 //    let api = "AIzaSyBb5bfsce9uIlZ0gD7Hqi1LRqMZue6A4GY"
@@ -91,8 +92,8 @@ class PokeCardsCollectionViewController: UIViewController {
     
     private func showDetails(with types: [PokeTypes]) {
         let typeVC = TypesViewController(with: types)
+        typeVC.delegate = self
         let nv = UINavigationController(rootViewController: typeVC)
-        typeVC.tableView.reloadData()
         nv.modalPresentationStyle = .fullScreen
         present(nv, animated: true, completion: nil)
     }
@@ -102,15 +103,23 @@ class PokeCardsCollectionViewController: UIViewController {
 extension PokeCardsCollectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pokeNames.count
+        if filtredPokeNames.isEmpty {
+            return pokeNames.count
+        } else {
+            return filtredPokeNames.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCardCell.identifier, for: indexPath) as! PokeCardCell
         
-        let poke = pokeNames[indexPath.row]
-        cell.nameLabel.text = poke.name
-        cell.pokeImage.downloaded(from: pokeImageLink)
+        if filtredPokeNames.isEmpty {
+            let poke = pokeNames[indexPath.row]
+            cell.nameLabel.text = poke.name.capitalized
+        } else {
+            let poke = filtredPokeNames[indexPath.row]
+            cell.nameLabel.text = poke.pokemon.name.capitalized
+        }
         return cell
     }
 }
@@ -140,18 +149,22 @@ extension PokeCardsCollectionViewController: UICollectionViewDelegateFlowLayout 
 extension PokeCardsCollectionViewController: PokeNetworkManagerDelegate {
     
     func didGetPokeByType(type: PokeByType) {
-        print(type.pokemon)
+        
+        self.filtredPokeNames.append(contentsOf: type.pokemon)
+        collectionView.reloadData()
     }
     
     func didGetPokeTypes(types: PokeTypes) {
         self.pokeTypes.append(types)
-        
+        collectionView.reloadData()
     }
     
     func didGetPokemonImage(item: GoogleSearch) {
 
-        let link = item.items.first
-        pokeImageLink = link?.link ?? ""
+        for i in item.items {
+            print(i.link)
+            pokeImageLink = i.link
+        }
     }
     
     func didGetPokemons(pokemons: PokeDataModel) {
@@ -162,5 +175,14 @@ extension PokeCardsCollectionViewController: PokeNetworkManagerDelegate {
     
     func didFailWithError(error: Error) {
         showAlert(title: "Error", buttonTitle: "Ok", error: error)
+    }
+}
+
+extension PokeCardsCollectionViewController: TypesViewControllerDelegate {
+  
+    func didSelect(type: String) {
+        
+        apiManager.getPokeByType(type: type)
+        filtredPokeNames = []
     }
 }

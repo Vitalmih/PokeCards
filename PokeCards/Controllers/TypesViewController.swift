@@ -7,15 +7,23 @@
 
 import UIKit
 
+protocol TypesViewControllerDelegate: class {
+    
+    func didSelect(type: String)
+}
+
 class TypesViewController: UIViewController {
     
     var pokeTypes: [PokeTypes]
     var array = [Type]()
     
+    weak var delegate: TypesViewControllerDelegate?
+    
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(PokeTypesCell.self, forCellReuseIdentifier: PokeTypesCell.identifier)
         tableView.backgroundColor = .white
+        tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -39,6 +47,23 @@ class TypesViewController: UIViewController {
         
         view.addSubview(tableView)
         configureConstraints()
+        configureNavigationBar()
+    }
+    
+    //MARK: - Selectors
+    @objc func cancel() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func configureNavigationBar() {
+        let navigationBar = navigationController?.navigationBar
+        navigationBar?.barTintColor = .systemIndigo
+        navigationBar?.barStyle = .black
+        navigationBar?.isTranslucent = false
+        navigationBar?.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationItem.title = "PokeTypes"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+        navigationItem.leftBarButtonItem?.tintColor = .white
     }
     
     private func configureConstraints() {
@@ -64,12 +89,15 @@ extension TypesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PokeTypesCell.identifier, for: indexPath) as! PokeTypesCell
         let type = array[indexPath.row]
-        cell.textLabel?.text = type.name
+        cell.textLabel?.text = type.name.capitalized
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath)
-        showType(type: cell?.textLabel?.text ?? "")
+        
+        let type = array[indexPath.row]
+        self.delegate?.didSelect(type: type.name)
+        self.dismiss(animated: true, completion: nil)
     }
 }

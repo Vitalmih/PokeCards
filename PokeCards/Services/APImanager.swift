@@ -28,11 +28,10 @@ protocol PokeNetworkManagerDelegate {
 
 final class APIManager: PokeNetworkManagerProtocol {
    
-    
     var delegate: PokeNetworkManagerDelegate?
 
-    static let startUrlString = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=6"
-    var googleSearch = "https://www.googleapis.com/customsearch/v1?key=AIzaSyBb5bfsce9uIlZ0gD7Hqi1LRqMZue6A4GY&cx=d930cfdefb8533272&searchType=image&fileType=jpg&imgSize=xlarge&alt=json&start=0"
+    static let startUrlString = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=9"
+    var googleSearch = "https://www.googleapis.com/customsearch/v1?key=AIzaSyBb5bfsce9uIlZ0gD7Hqi1LRqMZue6A4GY&cx=a716d8c98e1ad584b&searchType=image&fileType=jpg&imgSize=xlarge&alt=json&start=0"
     var typeUrlString = "https://pokeapi.co/api/v2/type/"
     
     func getRepositories(path: String) {
@@ -48,7 +47,7 @@ final class APIManager: PokeNetworkManagerProtocol {
     }
     
     func getPokeByType(type: String) {
-        
+        performRequestPokeByType(with: type)
     }
     
     private func performRequest(with urlString: String) {
