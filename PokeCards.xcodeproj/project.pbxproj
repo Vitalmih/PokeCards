@@ -23,7 +23,7 @@
 		5EED5876260CCA7A007EB00D /* PokeCardsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED5875260CCA7A007EB00D /* PokeCardsCollectionViewController.swift */; };
 		5EED5879260CD1DA007EB00D /* PokeCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED5878260CD1DA007EB00D /* PokeCardCell.swift */; };
 		5EED587D260CE14D007EB00D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED587C260CE14D007EB00D /* Extensions.swift */; };
-		5EED5881260CF145007EB00D /* APImanager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED5880260CF145007EB00D /* APImanager.swift */; };
+		5EED5881260CF145007EB00D /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED5880260CF145007EB00D /* APIManager.swift */; };
 		5EED588A260CF592007EB00D /* PokeDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED5889260CF592007EB00D /* PokeDataModel.swift */; };
 		C53CA3512318AB60CE111A74 /* Pods_PokeCards.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE8F4B78742108757BC7A6C /* Pods_PokeCards.framework */; };
 /* End PBXBuildFile section */
@@ -48,7 +48,7 @@
 		5EED5875260CCA7A007EB00D /* PokeCardsCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokeCardsCollectionViewController.swift; sourceTree = "<group>"; };
 		5EED5878260CD1DA007EB00D /* PokeCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokeCardCell.swift; sourceTree = "<group>"; };
 		5EED587C260CE14D007EB00D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		5EED5880260CF145007EB00D /* APImanager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APImanager.swift; sourceTree = "<group>"; };
+		5EED5880260CF145007EB00D /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		5EED5889260CF592007EB00D /* PokeDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokeDataModel.swift; sourceTree = "<group>"; };
 		7EE8F4B78742108757BC7A6C /* Pods_PokeCards.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PokeCards.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CE6B3929EBA22735DF26706 /* Pods-PokeCards.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PokeCards.debug.xcconfig"; path = "Target Support Files/Pods-PokeCards/Pods-PokeCards.debug.xcconfig"; sourceTree = "<group>"; };
@@ -162,7 +162,7 @@
 		5EED587F260CF135007EB00D /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				5EED5880260CF145007EB00D /* APImanager.swift */,
+				5EED5880260CF145007EB00D /* APIManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -296,7 +296,7 @@
 				5EED5876260CCA7A007EB00D /* PokeCardsCollectionViewController.swift in Sources */,
 				5ED72D402610EB6800393588 /* PokeByType.swift in Sources */,
 				5EE782B9260E4EC000B03616 /* PokeDetails.swift in Sources */,
-				5EED5881260CF145007EB00D /* APImanager.swift in Sources */,
+				5EED5881260CF145007EB00D /* APIManager.swift in Sources */,
 				5ED72D3D2610DAD500393588 /* PokeTypesCell.swift in Sources */,
 				5ED72D342610BFE900393588 /* GoogleSearch.swift in Sources */,
 				5ED72D3A2610D91000393588 /* TypesViewController.swift in Sources */,
