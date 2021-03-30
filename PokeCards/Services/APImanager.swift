@@ -10,8 +10,9 @@ import Alamofire
 
 protocol PokeNetworkManagerProtocol: AnyObject {
     var delegate: PokeNetworkManagerDelegate? { get set }
-    
-    func getRepositories(path: String)
+
+    func getBasicPokemons()
+    func getPokemons(path: String)
     func getGoogleImage(path: String)
     func getPokeByType(type: String)
     func getPokeDetails(path: String)
@@ -29,6 +30,15 @@ protocol PokeNetworkManagerDelegate {
 }
 
 final class APIManager: PokeNetworkManagerProtocol {
+    func getBasicPokemons() {
+            let urlLink = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=18"
+            getPokemons(path: urlLink)
+        }
+    
+    func getPokemons(path: String) {
+        performRequest(with: path)
+    }
+    
     
     static let startUrlString = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=18"
     
@@ -39,10 +49,6 @@ final class APIManager: PokeNetworkManagerProtocol {
     
     func getPokeDetails(path: String) {
         performRequestPokeDetails(with: path)
-    }
-    
-    func getRepositories(path: String) {
-        performRequest(with: path)
     }
     
     func getGoogleImage(path: String) {

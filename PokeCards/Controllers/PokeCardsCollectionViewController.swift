@@ -9,7 +9,7 @@ import UIKit
 
 class PokeCardsCollectionViewController: UIViewController {
     
-    let apiManager: PokeNetworkManagerProtocol
+    private let apiManager: PokeNetworkManagerProtocol
     private var pokeNames = [Result]()
     private var pokeTypes = [PokeTypes]()
     private var filtredPokeNames = [PokeWithType]()
@@ -33,7 +33,7 @@ class PokeCardsCollectionViewController: UIViewController {
         addSubViews()
         configureNavibationsBar()
         configureConstraints()
-        apiManager.getRepositories(path: APIManager.startUrlString)
+        apiManager.getBasicPokemons()
         apiManager.getTypes()
     }
     
@@ -135,7 +135,7 @@ extension PokeCardsCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
         if indexPath.row == pokeNames.count - 3 && nextPage != "" {
-            apiManager.getRepositories(path: nextPage)
+            apiManager.getPokemons(path: nextPage)
         }
     }
     
@@ -185,7 +185,7 @@ extension PokeCardsCollectionViewController: PokeNetworkManagerDelegate {
     
     func didGetPokemons(pokemons: PokeDataModel) {
         self.pokeNames.append(contentsOf: pokemons.results)
-        self.nextPage = pokemons.next
+        self.nextPage = pokemons.next ?? ""
         collectionView.reloadData()
     }
     

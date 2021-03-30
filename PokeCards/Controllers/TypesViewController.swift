@@ -72,12 +72,6 @@ class TypesViewController: UIViewController {
         tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
-    
-    private func showType(type: String) {
-        let manager = APIManager()
-        let vc = PokeCardsCollectionViewController(apiManager: manager)
-        vc.apiManager.getPokeByType(type: type)
-    }
 }
 
 extension TypesViewController: UITableViewDelegate, UITableViewDataSource {
