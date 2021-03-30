@@ -11,6 +11,7 @@ class PokeCardsCollectionViewController: UIViewController {
     
     private let apiManager: PokeNetworkManagerProtocol
     private var pokeNames = [Result]()
+    private var pokeDetailInfo: PokeDetails?
     private var pokeTypes = [PokeTypes]()
     private var filtredPokeNames = [PokeWithType]()
     private var nextPage = ""
@@ -96,8 +97,11 @@ class PokeCardsCollectionViewController: UIViewController {
         present(nv, animated: true, completion: nil)
     }
     
-    private func showDetailVC() {
-        let detailVC = DetailViewController()
+    private func showDetailVC(name: String, exp: String, height: String, weight: String) {
+        guard let pokemon = pokeDetailInfo else {
+            return
+        }
+        let detailVC = DetailViewController(with: pokemon)
         let nv = UINavigationController(rootViewController: detailVC)
         nv.modalPresentationStyle = .fullScreen
         nv.navigationBar.tintColor = .white
@@ -140,8 +144,9 @@ extension PokeCardsCollectionViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        apiManager.getPokeDetails(path: "bulbasaur")
-        showDetailVC()
+        let poke = pokeNames[indexPath.row]
+        apiManager.getPokeDetails(path: poke.name)
+        showDetailVC(name: pokeDetailInfo?.name ?? "N/A", exp: String(pokeDetailInfo?.baseExperience ?? 0), height: String(pokeDetailInfo?.height ?? 0), weight: String(pokeDetailInfo?.weight ?? 0))
     }
 }
 
@@ -162,6 +167,7 @@ extension PokeCardsCollectionViewController: PokeNetworkManagerDelegate {
     
     func didGetPokeDetails(poke: PokeDetails) {
     
+        self.pokeDetailInfo = poke
         print(poke.abilities)
     }
     
