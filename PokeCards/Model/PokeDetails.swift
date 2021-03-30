@@ -12,10 +12,7 @@ struct PokeDetails: Codable {
     let abilities: [AbilityElements]
     let baseExperience: Int
     let height: Int
-    let id: Int
-    let locationAreaEncounters: String
     let name: String
-    let order: Int
     let sprites: Sprites
     let weight: Int
     
@@ -23,9 +20,7 @@ struct PokeDetails: Codable {
         case abilities
         case baseExperience = "base_experience"
         case height
-        case id
-        case locationAreaEncounters = "location_area_encounters"
-        case name, order
+        case name
         case sprites, weight
     }
 }
@@ -33,13 +28,9 @@ struct PokeDetails: Codable {
 // MARK: - Ability
 struct AbilityElements: Codable {
     let ability: Ability
-    let isHidden: Bool
-    let slot: Int
     
     enum CodingKeys: String, CodingKey {
         case ability
-        case isHidden = "is_hidden"
-        case slot
     }
 }
 
