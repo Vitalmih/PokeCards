@@ -11,7 +11,7 @@ class PokeCardsCollectionViewController: UIViewController {
     
     private let apiManager: PokeNetworkManagerProtocol
     private var pokeNames = [Result]()
-    private var pokeDetailInfo: PokeDetails?
+    private var pokeDetailInfo = [PokeDetails]()
     private var pokeTypes = [PokeTypes]()
     private var filtredPokeNames = [PokeWithType]()
     private var nextPage = ""
@@ -97,11 +97,10 @@ class PokeCardsCollectionViewController: UIViewController {
         present(nv, animated: true, completion: nil)
     }
     
-    private func showDetailVC(name: String, exp: String, height: String, weight: String) {
-        guard let pokemon = pokeDetailInfo else {
-            return
-        }
-        let detailVC = DetailViewController(with: pokemon)
+    private func showDetailVC(name: String) {
+        
+        let manager = APIManager()
+        let detailVC = DetailViewController(with: name, manager: manager)
         let nv = UINavigationController(rootViewController: detailVC)
         nv.modalPresentationStyle = .fullScreen
         nv.navigationBar.tintColor = .white
@@ -122,14 +121,17 @@ extension PokeCardsCollectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCardCell.identifier, for: indexPath) as! PokeCardCell
+        
         if filtredPokeNames.isEmpty {
             let poke = pokeNames[indexPath.row]
             cell.nameLabel.text = poke.name.capitalized
 //            apiManager.getGoogleImage(path: poke.name)
 //            cell.pokeImage.downloaded(from: pokeImageLink)
+            apiManager.getPokeDetails(path: poke.name)
         } else {
             let poke = filtredPokeNames[indexPath.row]
             cell.nameLabel.text = poke.pokemon.name.capitalized
+            apiManager.getPokeDetails(path: poke.pokemon.name)
         }
         return cell
     }
@@ -144,9 +146,14 @@ extension PokeCardsCollectionViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let poke = pokeNames[indexPath.row]
-        apiManager.getPokeDetails(path: poke.name)
-        showDetailVC(name: pokeDetailInfo?.name ?? "N/A", exp: String(pokeDetailInfo?.baseExperience ?? 0), height: String(pokeDetailInfo?.height ?? 0), weight: String(pokeDetailInfo?.weight ?? 0))
+        
+        if filtredPokeNames.isEmpty {
+            let poke = pokeNames[indexPath.row]
+            showDetailVC(name: poke.name)
+        } else {
+            let poke = filtredPokeNames[indexPath.row]
+            showDetailVC(name: poke.pokemon.name)
+        }
     }
 }
 
@@ -167,8 +174,7 @@ extension PokeCardsCollectionViewController: PokeNetworkManagerDelegate {
     
     func didGetPokeDetails(poke: PokeDetails) {
     
-        self.pokeDetailInfo = poke
-        print(poke.abilities)
+        self.pokeDetailInfo.append(poke)
     }
     
     func didGetPokeByType(type: PokeByType) {
@@ -201,6 +207,10 @@ extension PokeCardsCollectionViewController: PokeNetworkManagerDelegate {
 }
 
 extension PokeCardsCollectionViewController: TypesViewControllerDelegate {
+    func showAllPokemons(clean: [PokeWithType]) {
+        filtredPokeNames = clean
+        collectionView.reloadData()
+    }
     
     func didSelect(type: String) {
         apiManager.getPokeByType(type: type)

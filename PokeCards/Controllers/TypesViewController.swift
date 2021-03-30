@@ -10,6 +10,7 @@ import UIKit
 protocol TypesViewControllerDelegate: class {
     
     func didSelect(type: String)
+    func showAllPokemons(clean: [PokeWithType])
 }
 
 class TypesViewController: UIViewController {
@@ -55,6 +56,11 @@ class TypesViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    @objc func showAll() {
+        self.delegate?.showAllPokemons(clean: [])
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     private func configureNavigationBar() {
         let navigationBar = navigationController?.navigationBar
         navigationBar?.barTintColor = .systemIndigo
@@ -63,7 +69,10 @@ class TypesViewController: UIViewController {
         navigationBar?.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationItem.title = "PokeTypes"
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(showAll))
         navigationItem.leftBarButtonItem?.tintColor = .white
+        navigationItem.rightBarButtonItem?.tintColor = .white
+
     }
     
     private func configureConstraints() {
@@ -89,7 +98,6 @@ extension TypesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         let type = array[indexPath.row]
         self.delegate?.didSelect(type: type.name)
         self.dismiss(animated: true, completion: nil)
