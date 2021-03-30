@@ -13,6 +13,7 @@ class DetailViewController: UIViewController {
         let image = UIImageView()
         image.backgroundColor = .systemGray5
         image.contentMode = .scaleAspectFit
+        image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
     
@@ -20,14 +21,18 @@ class DetailViewController: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 16)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Pikachu"
         return label
     }()
     
     lazy var pokeNameContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemIndigo
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(pokeName)
-        pokeName.center(inView: view)
+        view.addSubview(avatar)
         return view
     }()
     
@@ -61,15 +66,29 @@ class DetailViewController: UIViewController {
     }
     
     private func configrueConstraints() {
-        avatar.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        avatar.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-        avatar.widthAnchor.constraint(equalToConstant: 128).isActive = true
-        avatar.heightAnchor.constraint(equalToConstant: 128).isActive = true
+//        avatar.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//        avatar.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+//        avatar.widthAnchor.constraint(equalToConstant: 128).isActive = true
+//        avatar.heightAnchor.constraint(equalToConstant: 128).isActive = true
+        
+        pokeNameContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        pokeNameContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        pokeNameContainerView.widthAnchor.constraint(equalToConstant: 128).isActive = true
+        pokeNameContainerView.heightAnchor.constraint(equalToConstant: 128).isActive = true
+        
+        pokeName.bottomAnchor.constraint(equalTo: pokeNameContainerView.bottomAnchor, constant: -6).isActive = true
+        pokeName.leftAnchor.constraint(equalTo: pokeNameContainerView.leftAnchor).isActive = true
+        pokeName.rightAnchor.constraint(equalTo: pokeNameContainerView.rightAnchor).isActive = true
+        
+        
     }
     
     private func addSubViews() {
         view.addSubview(avatar)
         view.addSubview(pokeNameContainerView)
+        view.addSubview(baseExp)
+        view.addSubview(pokeHeight)
+        view.addSubview(pokeWeight)
     }
     
     private func configureNavigationBar() {
@@ -81,5 +100,4 @@ class DetailViewController: UIViewController {
         navigationItem.title = "PokeDetails"
         navigationBar?.tintColor = .white
     }
-    
 }
