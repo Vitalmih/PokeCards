@@ -22,11 +22,10 @@ class PokeCardCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 16)
-        label.text = "Pikachu"
         return label
     }()
     
-    lazy var pokeNamecontainerView: UIView = {
+    lazy var pokeNameContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemIndigo
         view.addSubview(nameLabel)
@@ -47,11 +46,11 @@ class PokeCardCell: UICollectionViewCell {
     
     private func addSubviews() {
         addSubview(pokeImage)
-        addSubview(pokeNamecontainerView)
+        addSubview(pokeNameContainerView)
     }
     
     private func setupConstraints() {
-        pokeNamecontainerView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 32)
+        pokeNameContainerView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 32)
         pokeImage.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: self.frame.height - 32)
     }
     

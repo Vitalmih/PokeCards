@@ -7,12 +7,6 @@
 
 import Foundation
 
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let pokeDataModel = try? newJSONDecoder().decode(PokeDataModel.self, from: jsonData)
-
-import Foundation
 
 // MARK: - PokeDataModel
 struct PokeByType: Codable {
@@ -24,7 +18,7 @@ struct PokeByType: Codable {
     let moves: [Generation]
     let name: String
     let names: [Name]
-    let pokemon: [Pokemon]
+    let pokemon: [PokeWithType]
 
     enum CodingKeys: String, CodingKey {
         case damageRelations = "damage_relations"
@@ -75,7 +69,7 @@ struct Name: Codable {
 }
 
 // MARK: - Pokemon
-struct Pokemon: Codable {
+struct PokeWithType: Codable {
     let pokemon: Generation
     let slot: Int
 }

@@ -14,6 +14,7 @@ protocol PokeNetworkManagerProtocol: AnyObject {
     func getRepositories(path: String)
     func getGoogleImage(path: String)
     func getPokeByType(type: String)
+    func getPokeDetails(path: String)
     func getTypes()
 }
 
@@ -23,16 +24,22 @@ protocol PokeNetworkManagerDelegate {
     func didGetPokemons(pokemons: PokeDataModel)
     func didGetPokeTypes(types: PokeTypes)
     func didGetPokeByType(type: PokeByType)
+    func didGetPokeDetails(poke: PokeDetails)
     func didFailWithError(error: Error)
 }
 
 final class APIManager: PokeNetworkManagerProtocol {
-   
+    
+    static let startUrlString = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=18"
+    
     var delegate: PokeNetworkManagerDelegate?
-
-    static let startUrlString = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=9"
     var googleSearch = "https://www.googleapis.com/customsearch/v1?key=AIzaSyBb5bfsce9uIlZ0gD7Hqi1LRqMZue6A4GY&cx=a716d8c98e1ad584b&searchType=image&fileType=jpg&imgSize=xlarge&alt=json&start=0"
     var typeUrlString = "https://pokeapi.co/api/v2/type/"
+    var detailUrlString = "https://pokeapi.co/api/v2/pokemon/"
+    
+    func getPokeDetails(path: String) {
+        performRequestPokeDetails(with: path)
+    }
     
     func getRepositories(path: String) {
         performRequest(with: path)
@@ -142,4 +149,26 @@ final class APIManager: PokeNetworkManagerProtocol {
         }
     }
     
+    private func performRequestPokeDetails(with name: String) {
+        let urlString = "\(detailUrlString)\(name)"
+        AF.request(urlString, method: .get).responseJSON { response in
+            switch response.result {
+            case .success:
+                let decoder = JSONDecoder()
+                guard let data = response.data else { return }
+                do {
+                    let decodedData = try decoder.decode(PokeDetails.self, from: data)
+                    DispatchQueue.main.async {
+                        self.delegate?.didGetPokeDetails(poke: decodedData)
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        self.delegate?.didFailWithError(error: error)
+                    }
+                }
+            case .failure(let error):
+                self.delegate?.didFailWithError(error: error)
+            }
+        }
+    }
 }

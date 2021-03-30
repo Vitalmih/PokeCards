@@ -14,7 +14,7 @@ struct GoogleSearch: Codable {
     let queries: Queries
     let context: Context
     let searchInformation: SearchInformation
-    let items: [Item]
+    let items: [Item]?
 }
 
 // MARK: - Context

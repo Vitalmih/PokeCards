@@ -10,14 +10,13 @@ import UIKit
 class PokeCardsCollectionViewController: UIViewController {
     
     let apiManager: PokeNetworkManagerProtocol
-    var pokeNames = [Result]()
-    var pokeTypes = [PokeTypes]()
-    var filtredPokeNames = [Pokemon]()
-    var nextPage = ""
-  
-//    let api = "AIzaSyBb5bfsce9uIlZ0gD7Hqi1LRqMZue6A4GY"
-//    let cx = "d930cfdefb8533272"
+    private var pokeNames = [Result]()
+    private var pokeTypes = [PokeTypes]()
+    private var filtredPokeNames = [PokeWithType]()
+    private var nextPage = ""
+    
     var pokeImageLink = ""
+    
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -50,16 +49,15 @@ class PokeCardsCollectionViewController: UIViewController {
     }
     
     //MARK: - Selectors
-    @objc func handleShowSearchBar() {
+    @objc func showTypes() {
+        showTypesVC(with: pokeTypes)
+    }
+    
+    @objc func addPoke() {
         
     }
     
-    @objc func showTypes() {
-        showDetails(with: pokeTypes)
-    }
-    
     //MARK: - Functions
-    
     private func configureNavibationsBar() {
         let navigationBar = navigationController?.navigationBar
         navigationBar?.barTintColor = .systemIndigo
@@ -67,10 +65,10 @@ class PokeCardsCollectionViewController: UIViewController {
         navigationBar?.isTranslucent = false
         navigationBar?.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationItem.title = "PokeCards"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(handleShowSearchBar))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPoke))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(showTypes))
-        navigationItem.rightBarButtonItem?.tintColor = .white
         navigationItem.leftBarButtonItem?.tintColor = .white
+        navigationItem.rightBarButtonItem?.tintColor = .white
     }
     
     private func configureConstraints() {
@@ -90,12 +88,20 @@ class PokeCardsCollectionViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    private func showDetails(with types: [PokeTypes]) {
+    private func showTypesVC(with types: [PokeTypes]) {
         let typeVC = TypesViewController(with: types)
         typeVC.delegate = self
         let nv = UINavigationController(rootViewController: typeVC)
         nv.modalPresentationStyle = .fullScreen
         present(nv, animated: true, completion: nil)
+    }
+    
+    private func showDetailVC() {
+        let detailVC = DetailViewController()
+        let nv = UINavigationController(rootViewController: detailVC)
+        nv.modalPresentationStyle = .fullScreen
+        nv.navigationBar.tintColor = .white
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
@@ -112,10 +118,11 @@ extension PokeCardsCollectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokeCardCell.identifier, for: indexPath) as! PokeCardCell
-        
         if filtredPokeNames.isEmpty {
             let poke = pokeNames[indexPath.row]
             cell.nameLabel.text = poke.name.capitalized
+//            apiManager.getGoogleImage(path: poke.name)
+//            cell.pokeImage.downloaded(from: pokeImageLink)
         } else {
             let poke = filtredPokeNames[indexPath.row]
             cell.nameLabel.text = poke.pokemon.name.capitalized
@@ -130,6 +137,11 @@ extension PokeCardsCollectionViewController: UICollectionViewDelegate {
         if indexPath.row == pokeNames.count - 3 && nextPage != "" {
             apiManager.getRepositories(path: nextPage)
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        apiManager.getPokeDetails(path: "bulbasaur")
+        showDetailVC()
     }
 }
 
@@ -148,8 +160,12 @@ extension PokeCardsCollectionViewController: UICollectionViewDelegateFlowLayout 
 
 extension PokeCardsCollectionViewController: PokeNetworkManagerDelegate {
     
+    func didGetPokeDetails(poke: PokeDetails) {
+    
+        print(poke.abilities)
+    }
+    
     func didGetPokeByType(type: PokeByType) {
-        
         self.filtredPokeNames.append(contentsOf: type.pokemon)
         collectionView.reloadData()
     }
@@ -160,11 +176,11 @@ extension PokeCardsCollectionViewController: PokeNetworkManagerDelegate {
     }
     
     func didGetPokemonImage(item: GoogleSearch) {
-
-        for i in item.items {
-            print(i.link)
-            pokeImageLink = i.link
-        }
+        
+//        item.items?.compactMap {item in
+//            print (item.link)
+//            pokeImageLink = item.link
+//        }
     }
     
     func didGetPokemons(pokemons: PokeDataModel) {
@@ -179,9 +195,8 @@ extension PokeCardsCollectionViewController: PokeNetworkManagerDelegate {
 }
 
 extension PokeCardsCollectionViewController: TypesViewControllerDelegate {
-  
+    
     func didSelect(type: String) {
-        
         apiManager.getPokeByType(type: type)
         filtredPokeNames = []
     }
