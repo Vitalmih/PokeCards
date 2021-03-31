@@ -8,16 +8,14 @@
 import UIKit
 
 protocol TypesViewControllerDelegate: class {
-    
     func didSelect(type: String)
     func showAllPokemons(clean: [PokeWithType])
 }
 
 class TypesViewController: UIViewController {
     
-    var pokeTypes: [PokeTypes]
-    var array = [Type]()
-    
+    private var pokeTypes: [PokeTypes]
+    private var array = [Type]()
     weak var delegate: TypesViewControllerDelegate?
     
     lazy var tableView: UITableView = {
@@ -31,6 +29,7 @@ class TypesViewController: UIViewController {
         return tableView
     }()
     
+    //MARK: - Init
     init(with types: [PokeTypes]) {
         self.pokeTypes = types
         super.init(nibName: nil, bundle: nil)
@@ -45,7 +44,6 @@ class TypesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.addSubview(tableView)
         configureConstraints()
         configureNavigationBar()
@@ -61,6 +59,7 @@ class TypesViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    //MARK: - functions
     private func configureNavigationBar() {
         let navigationBar = navigationController?.navigationBar
         navigationBar?.barTintColor = .systemIndigo
@@ -72,7 +71,7 @@ class TypesViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(showAll))
         navigationItem.leftBarButtonItem?.tintColor = .white
         navigationItem.rightBarButtonItem?.tintColor = .white
-
+        
     }
     
     private func configureConstraints() {
@@ -83,6 +82,7 @@ class TypesViewController: UIViewController {
     }
 }
 
+//MARK: - UITableViewDelegate, UITableViewDataSource
 extension TypesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

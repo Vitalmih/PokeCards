@@ -35,12 +35,10 @@ class PokeCardCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         configureCell()
     }
     
     required init?(coder: NSCoder) {
-        
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -55,7 +53,6 @@ class PokeCardCell: UICollectionViewCell {
     }
     
     private func configureCell() {
-        
         self.layer.cornerRadius = 10
         self.clipsToBounds = true
         addSubviews()

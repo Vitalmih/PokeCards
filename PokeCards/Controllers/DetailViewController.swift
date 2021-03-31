@@ -109,6 +109,7 @@ class DetailViewController: UIViewController {
         return stack
     }()
     
+    //MARK: - init
     init(with pokemon: String, manager: APIManager) {
         self.apiManager = manager
         self.detailString = pokemon
@@ -129,6 +130,7 @@ class DetailViewController: UIViewController {
         apiManager.getPokeDetails(path: detailString)
     }
     
+    //MARK: - functions
     private func configrueConstraints() {
         
         pokeNameContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -197,7 +199,10 @@ class DetailViewController: UIViewController {
     }
 }
 
+//MARK: - PokeNetworkManagerDelegate
 extension DetailViewController: PokeNetworkManagerDelegate {
+    
+    //add new sparated managers
     
     func didGetPokemonImage(item: GoogleSearch) {
         
@@ -214,6 +219,8 @@ extension DetailViewController: PokeNetworkManagerDelegate {
     func didGetPokeByType(type: PokeByType) {
         
     }
+    
+    //Optimize
     
     func didGetPokeDetails(poke: PokeDetails) {
         self.pokeName.text = poke.name.capitalized
@@ -275,7 +282,6 @@ extension DetailViewController: PokeNetworkManagerDelegate {
             image.downloaded(from: frontShiny)
             stackView.addArrangedSubview(image)
         }
-        
     }
     
     func didFailWithError(error: Error) {
